@@ -1,5 +1,6 @@
 // KEYS
 // SPACE = REGENERATE
+// D = DISPLAY
 // 1,2,3,4 = PRESET DENSITIES
 // UP, DOWN = FADING SPEED
 // LEFT, RIGHT = JUMP PRESENT DENSITIES
@@ -17,6 +18,7 @@ let di = 2; // CHANGE STARTING DENSITY HERE
 let density = densities[di];
 let num = 5;
 let whiteSquareCount;
+let displayed = false;
 
 function setup() {
   tWeight = 0;
@@ -102,11 +104,16 @@ function draw() {
   fadeIn += 1 * (600 / generateInverval);
   fadeOut -= 1 * (600 / generateInverval);
 
-  fill(255, 0, 0);
-  textSize(40);
-  text("auto:" + autoState, width / 2 + w, height - 130);
-  text("speed:" + generateInverval, width / 2 + w, height - 90);
-  text("density:" + density, width / 2 + w, height - 50);
+  if (displayed) {
+    fill(255, 0, 0);
+    textSize(20);
+       text("auto:" + autoState + "    speed:" + generateInverval + "   density:" + density,  w, height + h);
+    // text("speed:" + generateInverval, w, height + h);
+    // text("   density:" + density, w, height + h);
+    // text("auto:" + autoState,  w, height + h);
+    // text("speed:" + generateInverval, w, height + h);
+    // text("density:" + density, w, height + h);
+  }
 }
 
 function autoDrive() {
@@ -196,6 +203,8 @@ function keyPressed() {
     init();
   } else if (key == "a") {
     autoState = !autoState;
+  } else if (key == "d") {
+    displayed = !displayed;
   }
 
   generateInverval = constrain(generateInverval, 60, 900);
