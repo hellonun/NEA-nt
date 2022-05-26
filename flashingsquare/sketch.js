@@ -1,11 +1,13 @@
 // KEYS
 // SPACE = PAUSE SKETCH
+// D = DISPLAY DEBUG INFO
 // 1,2,3,4 = PRESET RATES
 // UP, DOWN = JUMP PRESETS
 // LEFT, RIGHT = +/- 30 FRAMES
 // A = AUTO VS. MANUAL (AUTO MEANS WEIGHTED RANDOM)
 // Z, X = OFF/ON
 // C = toggle state and pause
+
 
 let state = true;
 let autoState = false;
@@ -17,6 +19,7 @@ let rates = [20, 60, 120, 300, 600]; // frames;
 let rate = rates[2];
 let jumpValue = 30;
 let pause = false;
+let displayed = false;
 
 function setup() {
   tWeight = 0;
@@ -59,30 +62,37 @@ function draw() {
     timeTillChange = rate - (frameCount % rate);
   }
 
-  // draw debug line
-  stroke(255);
-  strokeWeight(3);
-  line(0, height * 0.95, width, height * 0.95);
+  if (displayed) {
+    // draw debug line
+    stroke(255);
+    strokeWeight(3);
+    line(0, height * 0.95, width, height * 0.95);
 
-  textAlign(CENTER, TOP);
-  for (i = 0; i < rates.length; i++) {
-    tempV = map(rates[i], rates[0], rates[rates.length - 1], 0, width);
+    textAlign(CENTER, TOP);
+    for (i = 0; i < rates.length; i++) {
+      tempV = map(rates[i], rates[0], rates[rates.length - 1], 0, width);
+      rect(tempV, height * 0.95, width / 200, height / 50);
+      noStroke();
+      text(rates[i], tempV, height * 0.95 + height / 50);
+    }
+
+    fill(255, 0, 0);
+    tempV = map(rate, rates[0], rates[rates.length - 1], 0, width);
     rect(tempV, height * 0.95, width / 200, height / 50);
-    noStroke();
-    text(rates[i], tempV, height * 0.95 + height / 50);
+
+    text(rate, tempV, height * 0.95 + height / 50);
+
+    textAlign(LEFT, TOP);
+    text(
+      "automation: " + autoState + "    time till change: " + timeTillChange,
+      0,
+      height - height / 75
+    );
   }
+}
 
-  fill(255, 0, 0);
-  tempV = map(rate, rates[0], rates[rates.length - 1], 0, width);
-  rect(tempV, height * 0.95, width / 200, height / 50);
-  text(rate, tempV, height * 0.95 + height / 50);
-
-  textAlign(LEFT, TOP);
-  text(
-    "automation: " + autoState + "    time till change: " + timeTillChange,
-    0,
-    height - height / 75
-  );
+function displayDebug() {
+  displayed = !displayed;
 }
 
 function toggle() {
@@ -162,6 +172,8 @@ function keyPressed() {
     state = !state;
     pause = true;
     playPauseSketch();
+  } else if (key == "d") {
+    displayDebug();
   }
 }
 
